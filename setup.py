@@ -5,17 +5,17 @@ import uuid
 from setuptools import setup, find_packages
 from pip.req import parse_requirements
 
-__author__ = 'Piotr Pieprzycki <piotr.pieprzycki@dreamlab.pl>'
+__author__ = 'Barney Sowood <barney@sowood.co.uk>'
 
 install_reqs = parse_requirements('requirements.txt', session=uuid.uuid1())
 reqs = [str(ir.req) for ir in install_reqs]
 
 setup(
-    name="napalm-vyos",
+    name="napalm-edgeos",
     version="0.1.5",
     packages=find_packages(),
-    author="Piotr Pieprzycki",
-    author_email="piotr.pieprzycki@dreamlab.pl",
+    author="Barney Sowood",
+    author_email="barney@sowood.co.uk",
     description="Network Automation and Programmability Abstraction Layer with Multivendor support",
     classifiers=[
         'Topic :: Utilities',
