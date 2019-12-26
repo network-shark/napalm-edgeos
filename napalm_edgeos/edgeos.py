@@ -815,7 +815,7 @@ class EdgeOSDriver(NetworkDriver):
 
         return user_auth
 
-    def ping(self,
+    def ping(self#,
              destination,
              source=C.PING_SOURCE,
              ttl=C.PING_TTL,
@@ -827,11 +827,11 @@ class EdgeOSDriver(NetworkDriver):
 
         deadline = timeout * count
 
-        command = "ping %s " % destination
-        command += "ttl %d " % ttl
-        command += "deadline %d " % deadline
-        command += "size %d " % size
-        command += "count %d " % count
+        command = "/bin/ping %s " % destination
+        command += "-t %d " % ttl
+        command += "-w %d " % deadline
+        command += "-s %d " % size
+        command += "-c %d " % count
         if source != "":
             command += "interface %s " % source
 
@@ -850,6 +850,7 @@ class EdgeOSDriver(NetworkDriver):
             # ['5', 'packets', 'transmitted,' '5', 'received,' '0%', 'packet',
             # 'loss,', 'time', '3997ms']
             packet_info = output_ping.split("\n")
+#            print(packet_info)
 
             if len(packet_info[-1]) > 0:
                 packet_info = packet_info[-2]
