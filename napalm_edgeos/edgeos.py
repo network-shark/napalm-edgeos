@@ -815,7 +815,7 @@ class EdgeOSDriver(NetworkDriver):
 
         return user_auth
 
-    def ping(self#,
+    def ping(self,
              destination,
              source=C.PING_SOURCE,
              ttl=C.PING_TTL,
