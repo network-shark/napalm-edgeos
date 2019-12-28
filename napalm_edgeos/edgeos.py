@@ -755,8 +755,13 @@ class EdgeOSDriver(NetworkDriver):
                 # Key initialization
                 ifaces_ip[iface_name] = dict()
 
-            ip_addr, mask = iface[0].split("/")
-            ip_ver = self._get_ip_version(ip_addr)
+            try:
+                ip_addr, mask = iface[0].split("/")
+                ip_ver = self._get_ip_version(ip_addr)
+            except ValueError:
+                ip_ver = self._get_ip_version(ip_addr)
+                ip_addr = iface[0]
+                mask = '32'
 
             # Key initialization
             if ip_ver not in ifaces_ip[iface_name]:
