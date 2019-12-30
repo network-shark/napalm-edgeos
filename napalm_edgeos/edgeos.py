@@ -37,6 +37,8 @@ from napalm.base.base import NetworkDriver
 from napalm.base.exceptions import ConnectionException, MergeConfigException, \
                                    ReplaceConfigException, CommitError, \
                                    CommandErrorException
+import logging
+
 
 
 class EdgeOSDriver(NetworkDriver):
@@ -316,6 +318,15 @@ class EdgeOSDriver(NetworkDriver):
         # Convert the configuration to dictionary
         config = vyattaconfparser.parse_conf(output_conf)
 
+
+        output = self.device.send_command("show interfaces detail")
+        eth_interfaces = re.findall("(eth[0-48]): <.*", output)
+
+        output = self.device.send_command("show interfaces ethernet detail")
+
+        mac_regex = re.compile(r'\s+(\w+\/\w+)\s((?:[0-9a-fA-F]:?){12})\s(\w+)\s((?:[0-9a-fA-F]:?){12})')
+        macs = mac_regex.findall(output)
+
         iface_dict = dict()
 
         for iface_type in config["interfaces"]:
@@ -348,6 +359,10 @@ class EdgeOSDriver(NetworkDriver):
                     "mac_address": py23_compat.text_type(hw_id)
                   }
                 })
+
+        for interface in eth_interfaces:
+            mac =  macs.pop(0)
+            iface_dict[interface]["mac_address"] = mac[1]
 
         return iface_dict
 
