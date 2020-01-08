@@ -37,8 +37,6 @@ from napalm.base.base import NetworkDriver
 from napalm.base.exceptions import ConnectionException, MergeConfigException, \
                                    ReplaceConfigException, CommitError, \
                                    CommandErrorException
-import logging
-
 
 
 class EdgeOSDriver(NetworkDriver):
@@ -329,6 +327,11 @@ class EdgeOSDriver(NetworkDriver):
 
         iface_dict = dict()
 
+        output = self.device.send_command("show interfaces ethernet physical")
+        speed_regex = re.compile(r'(Speed:)\s([0-9]{1,10})([GM]b\/s)')
+        interface_speeds = speed_regex.findall(output)
+
+
         for iface_type in config["interfaces"]:
 
             ifaces_detail = config["interfaces"][iface_type]
@@ -363,6 +366,10 @@ class EdgeOSDriver(NetworkDriver):
         for interface in eth_interfaces:
             mac =  macs.pop(0)
             iface_dict[interface]["mac_address"] = mac[1]
+
+        for interface in eth_interfaces:
+            if_speed =  interface_speeds.pop(0)
+            iface_dict[interface]["speed"] = if_speed[1]
 
         return iface_dict
 
